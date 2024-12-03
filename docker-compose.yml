@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=mongodb://mongo:27017
+      - DB_NAME=goLangDB
+    ports:
+      - "5050:5050"
+    depends_on:
+      - mongo
+    networks:
+      - my-network
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo_container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - my-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  mongo_data:
+networks:
+  my-network:

@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 	"go-chi-app.com/go-chi-app/pkg/config"
@@ -21,8 +22,8 @@ func init() {
 }
 func main() {
 	// Connect to MongoDB
-	mongoURI := "mongodb://localhost:27017"
-	dbName := "goLangDB"
+	mongoURI := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
 	config.ConnectMongoDB(mongoURI, dbName)
 
 	// Set up the router
